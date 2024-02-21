@@ -1,9 +1,11 @@
+from django.http import HttpResponse
 from django.shortcuts import render
 from productApp.models import Product
 from paypal.standard.forms import PayPalPaymentsForm
 from django.conf import settings
 import uuid
 from django.urls import reverse
+from .credentials import *
 
 
 def CheckOut(request, product_id):
@@ -46,4 +48,26 @@ def paymentFailed(request, product_id):
 
 def pay(request, id):
     product = Product.objects.get(id=id)
+    if request.method == "POST":
+        phone = request.POST['phone']
+        amount = product.price
+        access_token = MpesaAccessToken.validated_mpesa_access_token
+        api_url = "https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest"
+        headers = {"Authorization": "Bearer %s" % access_token}
+        request = {
+            "BusinessShortCode": LipanaMpesaPassword.Business_short_code,
+            "Password": LipanaMpesaPassword.decode_password,
+            "Timestamp": LipanaMpesaPassword.lipa_time,
+            "TransactionType": "CustomerPayBillOnline",
+            "Amount": amount,
+            "PartyA": phone,
+            "PartyB": LipanaMpesaPassword.Business_short_code,
+            "PhoneNumber": phone,
+            "CallBackURL": "https://sandbox.safaricom.co.ke/mpesa/",
+            "AccountReference": "PYMENT001",
+            "TransactionDesc": "School fees"
+        }
+
+        response = requests.post(api_url, json=request, headers=headers)
+        return HttpResponse("success")
     return render(request, 'pay.html', {'product': product})

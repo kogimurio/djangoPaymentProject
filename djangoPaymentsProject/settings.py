@@ -40,7 +40,6 @@ INSTALLED_APPS = [
     'paymentApp',
     'productApp',
     'paypal.standard.ipn',
-    'product',
 
 ]
 
