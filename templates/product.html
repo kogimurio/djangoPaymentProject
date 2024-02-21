@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h1>Products</h1>
+    <div class="product-container">
+        {% for product in products %}
+            <div class="products">
+                <a href="{% url 'checkout' product.id %}">
+                    <img class="img" src="{{product.image}}" alt="">
+                </a><br>
+                <a href="{% url 'checkout' product.id %}">{{product.name}}</a>
+                <p>$ {{product.price}}</p>
+            </div>
+            
+        {% endfor %}
+    </div>
+    <style>
+        body {
+            padding: 10px;
+            box-sizing: border-box;
+        }
+
+        .product-container {
+            display: flex;
+            flex-direction: row;
+            width: 100%;
+            height: 100vh;
+        }
+        .img {
+            width: 60%;
+            border-radius: 50px;
+        }
+    </style>
+{% endblock %}

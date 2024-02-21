@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block content %}
+	<div>
+        <form action="" method="post">
+            {% csrf_token %}
+            <fieldset>
+                <legend>Paying for {{ product.name }}</legend>
+                <label>Amount</label><br>
+                <input name="price" type="text" readonly value="{{ product.price }}"><br><br>
+                <input name="phone" type="text" placeholder="Enter Phone Number(254...)"><br><br>
+            </fieldset>
+            <div>
+                <input type="submit" value="Pay">
+            </div>
+        </form>
+    </div>
+{% endblock %}
